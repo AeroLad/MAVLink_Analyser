@@ -83,9 +83,20 @@ def print_packets(pcap):
 
         # Extrack MAVLINK data from UDP datagram
         mavlink_data        = udp.data
-        mavlink_object      = apm.MAVLink(mavlink_data)
+        mavlink_object      = apm.MAVLink(mavlink_data) # Wrong
         mavlink_msg         = mavlink_object.parse_buffer(mavlink_data)[0]
         mavlink_msg_type    = mavlink_msg.get_type()
+        print(mavlink_msg_type)
+        #for fieldname in mavlink_msg.get_fieldnames():
+        #    print(fieldname)
+        #for key in mavlink_msg:
+        #    print("%s: %s" %(key,mavlink_msg[key]))
+        print("UDP: %i" %(len(udp.data)))
+        test = mavlink_msg.get_msgbuf()
+        print("MSG BUF: %i" %(len(test)))
+        for item in test:
+            print(str(item), end=" ")
+        print("\n\n")
 
         #print("MAVLINK: %d bytes" %(len(mavlink_data)))
         #print("MSG: %s" %(mavlink_msg_type))
@@ -102,6 +113,7 @@ def print_packets(pcap):
         data["UdpSum"]          = int(udp.sum)
         data["MAVL_type"]       = mavlink_msg_type
         data["MAVL_len"]        = len(mavlink_data)
+        data["Raw"]             = unicode(udp.data, errors='ignore')
 
         total.append(data)
 
